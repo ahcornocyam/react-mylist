@@ -11,7 +11,7 @@ class MyList extends Component {
     }
 
     static defaultProps = {
-      children: React.PropTypes.node
+      children: []
     }
 
     componentDidMount () {
@@ -29,14 +29,19 @@ class MyList extends Component {
   render() {
     let props = this.props
     let state = this.state
-    const child = (child, index) => <ListItem color="red" text={child.props.children} />
+    
+    const listItens =  (children) => {
+      return children.map(props.children, function (child) {
+        return <ListItem color="red" text={child} />
+      })
+    }
     return (
       <div>
-        <h3>Total de Itens : {props.children.length} </h3>
+        <h3>Total de Itens : {React.Children.count(props.children)} </h3>
         <h3>Total de cliques : {state.totalClicks}</h3>
         <ul>
           {
-            props.children.map(child)
+            listItens(React.Children)
           }
         </ul>
       </div>
