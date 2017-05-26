@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
-import Events from 'events'
+import {EventEmitter} from 'events'
 
-var Channel = new Events.EventEmitter();
+var Channel = new EventEmitter();
 
 class ListItem extends Component {
   static defaultProps = {

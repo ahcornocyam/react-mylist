@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import ListItem from './ListItem'
-import Events from 'events'
+import {EventEmitter} from 'events'
 
-var Channel = new Events.EventEmitter()
+var Channel = new EventEmitter()
 
 class MyList extends Component {
 
