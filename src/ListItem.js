@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Events from 'events'
 
-let Channel = new Events.EventEmitter()
+var Channel = new Events.EventEmitter();
 
 class ListItem extends Component {
   static defaultProps = {
@@ -16,7 +16,7 @@ class ListItem extends Component {
   clicks() {
     let totalClicks = ++this.state.totalClicks
     this.setState({totalClicks})
-    Channel.emit('listItem:clicks')
+    Channel.emit('myList:clicks')
   }
 
   render () {
