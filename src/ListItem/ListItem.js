@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {channel} from '../Mylist/MyList'
+import css from './listItem.css'
 
 
 class ListItem extends Component {
@@ -17,18 +18,23 @@ class ListItem extends Component {
     this.setState({totalClicks})
     channel.emit('myList:clicks')
   }
+  remove() {
+    channel.emit('myList:remove', this.props.index)
+  }
 
   render () {
     let props = this.props
     let state = this.state
     let style = {
-      "cursor": "pointer",
       "color": props.color
-
+    }
+    let cursor = {
+      "cursor": "pointer"
     }
     return (
-      <li onClick={this.clicks.bind(this)} style={style}>
-        {props.text} - {state.totalClicks}
+      <li  style={style}>
+        <span onClick={this.clicks.bind(this)} style={cursor}>{props.text} - {state.totalClicks} </span> |
+      <button onClick={this.remove.bind(this)}> X </button>
       </li>
         )
       }

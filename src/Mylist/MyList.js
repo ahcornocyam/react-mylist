@@ -1,13 +1,16 @@
 import React, { Component } from 'react'
 import ListItem from '../ListItem/ListItem'
 import EventEmitter from 'eventemitter3'
+import css from './myList.css'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 var Channel = new EventEmitter()
 
 class MyList extends Component {
 
     state = {
-      totalClicks: 0
+      totalClicks: 0,
+      itens: []
     }
 
     static defaultProps = {
@@ -16,10 +19,12 @@ class MyList extends Component {
 
     componentDidMount () {
       Channel.on('myList:clicks', this.childClicks,this)
+      Channel.on('myList:remove', this.removeItem, this)
     }
 
     componentWillUnmount () {
       Channel.removeListener('myList:clicks', this.childClicks, this)
+      Channel.removeListener('myList:remove', this.removeItem, this)
     }
 
     childClicks() {
@@ -27,28 +32,51 @@ class MyList extends Component {
       this.setState({totalClicks})
     }
 
+    removeItem (index) {
+      let itens = this.state.itens
+      itens.splice(index, 1)
+      this.setState({itens})
+    }
+
+    insertItem () {
+      let itens = this.state.itens
+      let text = this.refs.listItemText.value || `Item ${itens.length+1}`
+      itens.push(text)
+      this.refs.listItemText.value = ""
+      this.setState({itens})
+    }
+
+
   render () {
     let props = this.props
     let state = this.state
 
-    const listItens =  (children) => {
-      return children.map(props.children, function (child) {
-        return <ListItem color="red" text={child} />
+    const listItens =(itens) => {
+      return itens.map((item, index) => {
+        return <ListItem key={index} index={index} color="red" text={item} />
       })
     }
 
-    const countClicque = function () {
-      return React.Children.count(props.children)
+    const countClique = function () {
+      return state.itens.length
     }
 
     return (
       <div>
-        <h3>Total de Itens : {countClicque()} </h3>
-        <h3>Total de cliques : {state.totalClicks}</h3>
+        <h3>Total de Itens : <i>{countClique()}</i> </h3>
+        <h3>Total de cliques : <i> {state.totalClicks}</i></h3>
+        <input type="text" ref="listItemText" />
+        <button onClick={this.insertItem.bind(this)}>Novo Item</button>
         <ul>
-          {
-            listItens(React.Children)
-          }
+          <ReactCSSTransitionGroup
+            transitionName="minhaLista"
+            transitionEnterTimeout={500}
+            transitionLeaveTimeout={300}
+            >
+            {
+              listItens(this.state.itens)
+            }
+          </ReactCSSTransitionGroup>
         </ul>
       </div>
     )
