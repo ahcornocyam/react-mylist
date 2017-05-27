@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
-import {EventEmitter} from 'events'
+import {channel} from '../Mylist/MyList'
 
-var Channel = new EventEmitter();
 
 class ListItem extends Component {
   static defaultProps = {
@@ -16,13 +15,17 @@ class ListItem extends Component {
   clicks() {
     let totalClicks = ++this.state.totalClicks
     this.setState({totalClicks})
-    Channel.emit('myList:clicks')
+    channel.emit('myList:clicks')
   }
 
   render () {
     let props = this.props
     let state = this.state
-    let style = {"cursor": "pointer", "color": props.color}
+    let style = {
+      "cursor": "pointer",
+      "color": props.color
+
+    }
     return (
       <li onClick={this.clicks.bind(this)} style={style}>
         {props.text} - {state.totalClicks}

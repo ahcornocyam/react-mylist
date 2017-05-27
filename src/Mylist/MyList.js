@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import ListItem from './ListItem'
-import {EventEmitter} from 'events'
+import ListItem from '../ListItem/ListItem'
+import EventEmitter from 'eventemitter3'
 
 var Channel = new EventEmitter()
 
@@ -15,10 +15,11 @@ class MyList extends Component {
     }
 
     componentDidMount () {
-      Channel.on('myList:clicks', this.childClicks)
+      Channel.on('myList:clicks', this.childClicks,this)
     }
+
     componentWillUnmount () {
-    Channel.removeListener('myList:clicks', this.childClicks)
+      Channel.removeListener('myList:clicks', this.childClicks, this)
     }
 
     childClicks() {
@@ -26,7 +27,7 @@ class MyList extends Component {
       this.setState({totalClicks})
     }
 
-  render() {
+  render () {
     let props = this.props
     let state = this.state
 
@@ -55,3 +56,4 @@ class MyList extends Component {
 }
 
 export default MyList;
+export const channel = Channel
